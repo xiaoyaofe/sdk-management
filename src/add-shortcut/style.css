@@ -286,7 +286,8 @@ p {
   background-image: url('./assets/android/page2_bg_TW.png');
 }
 
-.android-page2-menu-EN {
+.android-page2-menu-EN,
+.android-page2-menu-VN {
   background-image: url('./assets/android/page2_bg_EN.png');
 }
 

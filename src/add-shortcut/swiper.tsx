@@ -14,13 +14,13 @@ export default class Slides extends React.Component<{
   swiper: swiper
 
   componentDidMount() {
-    // setInterval(() => {
-    //   this.swiper.slideNext()
-    // }, 3000)
+    setInterval(() => {
+      this.swiper.slideNext()
+    }, 3000)
   }
   config = {
     containerClass: 'swiper-container',
-    // loop: true,
+    loop: true,
     pagination: {
       el: '.swiper-pagination',
       type: 'bullets',
@@ -96,7 +96,7 @@ export default class Slides extends React.Component<{
               <p className="android-select-text">{i18n.openMenu}</p>
             </div>
             <div className="android-page">
-              <div className={language === 'EN' ? 'android-page2-menu android-page2-menu-EN' : 'android-page2-menu android-page2-menu-TW'}>
+              <div className={'android-page2-menu android-page2-menu-' + language}>
                 <p className="android-select-text android-page2-select-text">{i18n.selectHome}</p>
                 <img className="android-page2-select-image" src={require('./assets/android/page2_select_image.png')} alt="select" />
                 <p className="android-page2-menu-text">{i18n.page2Tip4}</p>
