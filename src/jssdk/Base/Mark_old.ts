@@ -1,4 +1,4 @@
-import Utils from "Base/Utils";
+import { Utils } from "../utils";
 // 打点代码整体拿到了sspa中，有需要可以自行修改
 export default class Mark {
 

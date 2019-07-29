@@ -1,5 +1,3 @@
-import Utils from "./Utils";
-
 export default class Http {
   static _ins: Http
   static get instance(): Http {

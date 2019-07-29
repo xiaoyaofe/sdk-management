@@ -1,4 +1,4 @@
-import Utils from 'Base/Utils';
+import { Utils } from './utils';
 import Base from 'Src/Base'
 
 export default class Web extends Base {

@@ -170,7 +170,7 @@ export class SdkApi {
       this.logError('initNativeSDK', e);
     });
   }
-  // 未实现，一个jssdk的配置,暂时未使用
+  // 未实现，一个jssdk的配置接口,暂时未使用
   static getInitConfig(params: initWebSdkParams) {
 
     console.log(params);

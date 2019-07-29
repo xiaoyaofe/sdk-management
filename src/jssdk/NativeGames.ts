@@ -1,5 +1,5 @@
 import Http from 'Src/Base/Http';
-import Utils from 'Base/Utils';
+import { Utils } from './utils';
 import * as CryptoJS from 'crypto-js'
 import { Ins } from 'DOM/index'
 import { DOT } from './Base/Constant';
@@ -22,7 +22,7 @@ export default class NativeGames {
           console.log('jpwork.jpwork', OrderingData.showMethod, orderRes)
           if (orderRes.code === 200) { // 下单完成
             if (OrderingData.showMethod === 3) {
-              var jpParams = { // 获取Native的交易凭据 
+              var jpParams = { // 获取Native的交易凭据
                 productName: OrderingData.selectedProduct.productName,
                 transactionId: orderRes.data.transactionId,
                 channel: OrderingData.channel,
@@ -99,7 +99,7 @@ export default class NativeGames {
   }
 
   ExposeApis() {
-    window.RG = <any>{}
+    window.RG = <any> {}
     var exposeApis = [
       "server",
       "version",
@@ -217,7 +217,7 @@ export default class NativeGames {
         device: device,
         version: version,
         sdkVersion: RG.jssdk.version,
-        clientTime: new Date().format("yyyy-MM-dd hh:mm:ss"),
+        clientTime: Utils.formatDate(),
         firstInstall: 0,
         sign: Utils.signed({
           appId: RG.jssdk.config.appId,

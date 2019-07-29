@@ -1,5 +1,5 @@
 /* 此文件已经废弃，下一次更新时删除 */
-import Utils from "Base/Utils";
+import {Utils} from "./utils";
 import { DOT, GET, ERROR } from "Base/Constant";
 import { checkJsToNative } from "Src/adapter";
 import Polyfill from "Base/Polyfill";
@@ -196,7 +196,7 @@ export default class Main {
   initAdjust() {
     return new Promise((resolve, reject) => {
       if (this.config.mark_id.adjust.id) {
-        import("Base/adjust.min.js" as any)
+        import("Src/plugins/adjust.min.js" as any)
           .then(() => {
             if (Adjust) {
               resolve();

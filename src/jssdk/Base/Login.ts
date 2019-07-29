@@ -1,4 +1,4 @@
-import Utils from "Base/Utils";
+import { Utils } from "../utils";
 import Http from "Src/Base/Http";
 import { DOT } from "./Constant";
 

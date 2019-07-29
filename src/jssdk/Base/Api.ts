@@ -1,5 +1,5 @@
 import * as Const from "Src/Base/Constant"
-import Utils from "Base/Utils";
+import { Utils } from "../utils";
 import Http from "Src/Base/Http";
 
 export default class Api {

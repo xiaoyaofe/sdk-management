@@ -1,19 +1,19 @@
-import { TimeManager } from './timeManager'
+import { formatDate } from './timeManager'
 import { CookieManager } from './cookieManager'
 import { DeviceManager } from './deviceManager'
 import { UrlParmasManager } from './urlParamsManager';
 export const Utils = {
   // 暂时不需要操作cookie
   // cookies: CookieManager.instance,
-  time(date?: Date) {
-    return new TimeManager(date);
+  formatDate(date: Date = new Date()) {
+    return formatDate(date, "yyyy-MM-dd hh:mm:ss");
   },
   // 获取查询参数，并保存
   urlParamsManager: UrlParmasManager.instance,
   // 获取设备信息
   deviceManager: DeviceManager.instance,
   // 根据用户类型和账号类型来做提示
-  getAccountType: function (userType: UserType, accountType: AccountType) {
+  getAccountType: function (userType: number/* UserType */, accountType: /* AccountType */number) {
     if (accountType === 2) return "fb";
     if (userType === 0) return "guest";
     return "sdk";
@@ -54,4 +54,41 @@ export const Utils = {
     }).join('') + (RG.jssdk.config.app_key)
     return md5(data);
   },
+  /* 仅仅是为了兼容， */
+  getUrlParam(name?: string) {
+    return this.urlParamsManager.getUrlParam(name);
+  },
+  CookieManager: CookieManager.instance,
+  deviceType: DeviceManager.instance.getDeviceTypes()
 }
+
+type loadJsParams = {
+  success?: Function;
+  error?: Function;
+  id?: string;
+  asyncLoad?: boolean;
+  deferLoad?: boolean;
+}
+
+export function loadJs(url: string, params?: loadJsParams) {
+  const fjs = document.getElementsByTagName('script')[0];
+  if (params.id && document.getElementById(params.id)) return;
+  const js = document.createElement("script");
+  js.src = url;
+  params.asyncLoad && (js.async = true);
+  params.deferLoad && (js.defer = true);
+  params.id && (js.id = params.id);
+  if (params.success) {
+    js.onload = function (ev) {
+      params.success(ev);
+    };
+  }
+  if (params.error) {
+    js.onerror = function (ev) {
+      params.error(ev);
+    }
+  }
+  fjs.parentNode ? fjs.parentNode.insertBefore(js, fjs) : document.body.appendChild(js);
+}
+
+

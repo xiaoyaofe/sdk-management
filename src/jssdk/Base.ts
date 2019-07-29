@@ -3,8 +3,6 @@ import Payment from "Base/Payment";
 import Login from "Base/Login";
 import Api from "Base/Api";
 import Account from "Base/Account";
-import Utils from "Base/Utils";
-// import Mark from "Src/Base/Mark_old";
 
 export default class Base {
 
@@ -42,7 +40,7 @@ export default class Base {
   }
 
   CurUserInfo = (): JSSDK.CurUserInfo => {
-    return RG.jssdk.Account.user || Utils.getUrlParam('user')
+    return RG.jssdk.Account.user;
   }
 
   Share(shareUrl: string) {

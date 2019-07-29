@@ -107,7 +107,7 @@ export function facebookJssdkInit(fbAppId: string) {
 
 export function adjustSdkLoad() {
   return new Promise((resolve, reject) => {
-    import("Base/adjust.min.js" as any)
+    import("Src/plugins/adjust.min.js" as any)
       .then(() => {
         if (Adjust) {
           resolve();

@@ -1,5 +1,5 @@
 import Http from 'Src/Base/Http';
-import Utils from 'Base/Utils';
+import { Utils } from './utils';
 import * as CryptoJS from 'crypto-js'
 import { DOT } from './Base/Constant';
 import Base from './Base';
@@ -264,7 +264,7 @@ export default class Native extends Base {
         device: device,
         version: version,
         sdkVersion: RG.jssdk.version,
-        clientTime: new Date().format("yyyy-MM-dd hh:mm:ss"),
+        clientTime: Utils.formatDate(),
         firstInstall: 0,
         sign: Utils.signed({
           appId: RG.jssdk.config.appId,

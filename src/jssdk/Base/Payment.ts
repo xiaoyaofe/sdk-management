@@ -1,6 +1,6 @@
 
 import Http from "Src/Base/Http";
-import Utils from "Base/Utils";
+import { Utils } from "../utils";
 import Account from "Src/Base/Account";
 import * as Const from "Src/Base/Constant";
 
@@ -111,7 +111,7 @@ export default class Payment {
       operatorOs: deviceMsg.operatorOs,
       version: deviceMsg.version,
       sdkVersion: RG.jssdk.version,
-      clientTime: new Date().format("yyyy-MM-dd hh:mm:ss"),
+      clientTime: Utils.formatDate(),
       sign: null
     }
 
@@ -152,7 +152,7 @@ export default class Payment {
 
       advChannel: RG.jssdk.config.advChannel,
       sdkVersion: RG.jssdk.version,
-      clientTime: new Date().format("yyyy-MM-dd hh:mm:ss"),
+      clientTime: Utils.formatDate(),
 
       version: version,
       deviceNo: deviceNo,
