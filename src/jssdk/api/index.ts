@@ -6,7 +6,7 @@
 import { post, get } from '../plugins/request';
 
 export class SdkApi {
-  private baseUrl: string
+  public baseUrl: string
   private appKey: string
   private routes: {
     // 登录

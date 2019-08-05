@@ -30,6 +30,27 @@ export class Web extends Base {
       window.name = "";
     }
   }
+  // 下载到桌面
+  install() {
+    let url: string;
+    if (/(iPhone|iPad|iPod|iOS)/i.test(window.navigator.userAgent)) {
+      if (this.config.download_ios) {
+        url = this.config.download_ios;
+      } else {
+        url = `${SERVER}/jssdk/${this.config.sdkVersion}/add-shortcut.html?language=${this.config.language}&system=ios&appId=${this.config.appId}&link=${this.indexOrigin}`;
+      }
+    } else if (/(Android)/i.test(window.navigator.userAgent)) {
+      if (this.config.download_android) {
+        url = this.config.download_android;
+      } else {
+        url = `${SERVER}/jssdk/${this.config.sdkVersion}/add-shortcut.html?language=${this.config.language}&system=android&appId=${this.config.appId}&link=${this.indexOrigin}`;
+      }
+    } else {
+      url = `${SERVER}/platform/shortcut.jsp?link=${encodeURIComponent(this.indexOrigin + '?shortcut=true')}&fileName=${RG.jssdk.config.name}&t=${Date.now()}`;
+    }
+    console.info(url);
+    window.open(url);
+  }
   // 获取设备信息
   getDeviceMsgAsync = () => {
     // web 不管是移动端还是pc端source都是3
