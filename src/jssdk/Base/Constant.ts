@@ -2,7 +2,7 @@
 // export var UserInfo = PREFIX + '-' + 'userInfo'
 // export var UsersInfo = PREFIX + '-' + 'usersInfo'
 // export var LoginData = PREFIX + '-' + 'loginData'
-/** 
+/**
  * route
  */
 
@@ -32,12 +32,8 @@ export enum GET {
 }
 
 export enum DOT {
-
   SDK_LOADED = 'sdk_loaded',
   SDK_PURCHASED_DONE = 'sdk_purchased_done',
   SDK_REGISTER = 'sdk_register',
   SDK_CONTACT_US = 'sdk_contact_us',
-
-  FB_REGISTER = 'CompleteRegistration',
-
 }

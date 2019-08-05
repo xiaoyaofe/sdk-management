@@ -20,6 +20,6 @@ export enum DOT {
 }
 
 export const localStorageUserKeys = {
-  user: "_rg_user",
-  users: "_rg_users"
+  user: "_rg_game_user",
+  users: "_rg_game_users"
 }

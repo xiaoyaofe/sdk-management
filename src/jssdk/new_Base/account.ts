@@ -7,7 +7,6 @@ export class Account {
   }
   private _user: User;
   private _users: Users;
-  private api: SdkApi;
   get user() {
     return this._user;
   }
@@ -42,6 +41,7 @@ export type Users = {
 export interface User {
   accountType: number;
   emailValid: number;
+  email: string;
   firstLogin: number;
   password: string;
   token: string;

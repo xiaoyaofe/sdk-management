@@ -1,10 +1,11 @@
 import { formatDate } from './timeManager'
-import { CookieManager } from './cookieManager'
+// import { CookieManager } from './cookieManager'
 import { DeviceManager } from './deviceManager'
 import { UrlParmasManager } from './urlParamsManager';
-export const Utils = {
+
+export const Utils: Utils = {
   // 暂时不需要操作cookie
-  // cookies: CookieManager.instance,
+  //   cookieManager: CookieManager.instance,
   formatDate(date: Date = new Date()) {
     return formatDate(date, "yyyy-MM-dd hh:mm:ss");
   },
@@ -18,34 +19,34 @@ export const Utils = {
     if (userType === 0) return "guest";
     return "sdk";
   },
-  // 生成adjust中打点需要的设备参数
-  generateGpsAdid(len?: number, radix?: number) {
-    var chars = '0123456789abcdefghijklmnopqrstuvwxyz'.split('');
-    var uuid = [], i: number;
-    radix = radix || chars.length;
+  // 生成adjust中打点需要的设备参数,暂时不需要
+  // generateGpsAdid(len?: number, radix?: number) {
+  //   var chars = '0123456789abcdefghijklmnopqrstuvwxyz'.split('');
+  //   var uuid = [], i: number;
+  //   radix = radix || chars.length;
 
-    if (len) {
-      // Compact form
-      for (i = 0; i < len; i++) uuid[i] = chars[0 | Math.random() * radix];
-    } else {
-      // rfc4122, version 4 form
-      var r;
+  //   if (len) {
+  //     // Compact form
+  //     for (i = 0; i < len; i++) uuid[i] = chars[0 | Math.random() * radix];
+  //   } else {
+  //     // rfc4122, version 4 form
+  //     var r;
 
-      // rfc4122 requires these characters
-      uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-';
-      uuid[14] = '4';
+  //     // rfc4122 requires these characters
+  //     uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-';
+  //     uuid[14] = '4';
 
-      // Fill in random data.  At i==19 set the high bits of clock sequence as
-      // per rfc4122, sec. 4.1.5
-      for (i = 0; i < 36; i++) {
-        if (!uuid[i]) {
-          r = 0 | Math.random() * 16;
-          uuid[i] = chars[(i == 19) ? (r & 0x3) | 0x8 : r];
-        }
-      }
-    }
-    return uuid.join('');
-  },
+  //     // Fill in random data.  At i==19 set the high bits of clock sequence as
+  //     // per rfc4122, sec. 4.1.5
+  //     for (i = 0; i < 36; i++) {
+  //       if (!uuid[i]) {
+  //         r = 0 | Math.random() * 16;
+  //         uuid[i] = chars[(i == 19) ? (r & 0x3) | 0x8 : r];
+  //       }
+  //     }
+  //   }
+  //   return uuid.join('');
+  // },
   //参数签名
   signed(params) {
     var paramskeys = Object.keys(params)
@@ -58,8 +59,26 @@ export const Utils = {
   getUrlParam(name?: string) {
     return this.urlParamsManager.getUrlParam(name);
   },
-  CookieManager: CookieManager.instance,
-  deviceType: DeviceManager.instance.getDeviceTypes()
+  deviceType: DeviceManager.instance.getDeviceTypes(),
+  loadJs
+}
+
+export interface Utils {
+  formatDate: () => string;
+  urlParamsManager: UrlParmasManager;
+  deviceManager: DeviceManager;
+  getAccountType: (userType: number, account: number) => string;
+  generateGpsAdid: (len?: number, radix?: number) => string;
+  signed: (params) => string;
+  getUrlParam: (name?: string) => any;
+  deviceType: {
+    ios: boolean;
+    iPhone: boolean;
+    iPad: boolean;
+    android: boolean;
+    win: boolean;
+  }
+  loadJs: (url: string, params?: loadJsParams) => void
 }
 
 type loadJsParams = {

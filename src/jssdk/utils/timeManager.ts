@@ -1,16 +1,3 @@
-export class TimeManager {
-
-  private _date: Date;
-
-  constructor(date: Date = new Date()) {
-    this._date = date;
-  }
-
-  format(fmt: string): string {
-    return formatDate(this._date, fmt);
-  }
-}
-
 // 尽量不去改变系统对象上的方法，可能会对一些第三方的库造成影响
 export function formatDate(dateObj: Date, fmt: string) {
   if (!(dateObj instanceof Date)) throw "dateObj is not Date instance";

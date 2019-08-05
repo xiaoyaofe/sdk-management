@@ -115,7 +115,8 @@ Res: {
 }
 ```
 **使用方法：**
-```
+```js
+
 var data = {
   userId: 25086659,
   gameZoneId: 1,
@@ -154,16 +155,32 @@ RG.BindZone(data).then(function(data) {
 * **gameCoin**: 游戏币的数量
 <!-- * **product_id ?(not required)**: 购买的商品ID; 目前只有facebook支付需要用到， 具体的商品id由平台方提供 -->
 
-```
 使用方法：
 
+```js
+// {
+//   /* 用户Id */
+//   userId: number
+//   /* 游戏订单Id */
+//   gameOrderId: string;
+//   /* 游戏区服Id */
+//   gameZoneId: string;
+//   /* 角色Id */
+//   roleId: string;
+//   /* 角色名 */
+//   roleName: string;
+//   /* 角色等级 */
+//   level: string;
+//   /* 游戏币数量 */
+//   gameCoin: number;
+// }
 var data = {
   userId: 25086659,
-  gameOrderId: 86353509, // 假设的订单id
-  gameZoneId: 1,
-  roleId: 1001,
+  gameOrderId: '86353509', // 假设的订单id
+  gameZoneId:'1',
+  roleId: '1001',
   roleName: "role name",
-  level: 12,
+  level: '12',
   gameCoin: 100
 }
 

@@ -35,7 +35,7 @@ export default class Native extends Base {
         return Ordering(OrderingData).then(orderRes => {
           console.log('jpwork.jpwork', OrderingData.showMethod, orderRes)
           if (orderRes.code === 200) { // 下单完成
-            if (OrderingData.code === -1) {
+            if (OrderingData.showMethod === 3) {
               let jpParams = { // 获取Native的交易凭据
                 productName: OrderingData.selectedProduct.productName,
                 transactionId: orderRes.data.transactionId,

@@ -19,7 +19,7 @@ export class SdkApi {
     paymentConfig: "/config/paymentConfig/v4.0",
     // 创建订单
     createOrder: "/order/create/v4.0",
-    // 消单
+    // 苹果和谷歌官方充值消单，第三方不消单
     finishOrder: "/official/order/finish/v4.0",
     // 订单列表
     orderList: "/order/getOrderList",
@@ -28,9 +28,11 @@ export class SdkApi {
     // 修改密码
     changePassword: "/user/changePwd",
     // 初始化原生端参数
-    initNativeSDK: "/config/v3.1/initSDK"
+    initNativeSDK: "/config/v3.1/initSDK",
+    /*  找回密码的接口/pocketgames/client/user/forgetPwd/{appId}/{userName}/{sign}*/
+    forgetPwd: "/user/forgetPwd"
   }
-  constructor(region: Region, appKey: string) {
+  constructor(region: Region) {
     const BASEURL = {
       sg: 'https://sdk-sg.pocketgamesol.com',
       de: 'https://sdk-de.pocketgamesol.com',
@@ -38,6 +40,10 @@ export class SdkApi {
       test: 'https://sdk-test.changic.net.cn'
     }
     this.baseUrl = BASEURL[region] + "/pocketgames/client";
+  }
+  // appKey 需初始化请求完成才能拿到，因此需要初始化
+  init(appKey: string) {
+
     this.appKey = appKey;
   }
   // 平台登录
@@ -171,12 +177,21 @@ export class SdkApi {
     });
   }
   // 未实现，一个jssdk的配置接口,暂时未使用
-  static getInitConfig(params: initWebSdkParams) {
+  getInitConfig(params: initWebSdkParams) {
 
     console.log(params);
     // this.logError('getPaymentHistory', e);
     // this.appKey = params.appKey;
     // return params;
+  }
+  forgetPwd(params: forgetPwdParams): Promise<forgetPwdRes | void> {
+    const { appId, userName } = params;
+    // MD5(appId+userName+appKey)
+    const sign = this.getSign([appId, userName]);
+    const url = this.baseUrl + this.routes.forgetPwd + `/${appId}/${userName}/${sign}`;
+    return get<forgetPwdRes>(url).catch((e) => {
+      this.logError('forgetPwd', e);
+    });
   }
   // 获取加密参数
   getSign(params: (string | number)[]) {
@@ -209,7 +224,8 @@ interface LoginParam {
   // sign: string;
 }
 // 注册的参数
-type RegisterParams = LoginParam & {
+export type RegisterParams = LoginParam & RegisterRemainingParams;
+export interface RegisterRemainingParams {
   nickName?: string;
   accountType: AccountType;
   thirdPartyId?: string;
@@ -227,7 +243,7 @@ export interface LoginAndRegisterRes extends ServerRes {
     // 用户名
     userName: string;
     // 1.正式账号 0.游客账号
-    userType: 0 | 1;
+    userType: UserType
     // 账号类型
     accountType: AccountType;
     // 邮箱
@@ -244,8 +260,7 @@ export interface LoginAndRegisterRes extends ServerRes {
   // 平台token
   token: string;
 }
-
-type BindZoneParam = {
+interface BindZonePlatformParams {
   appId: number;
   advChannel: number;
   sdkVersion: string;
@@ -256,8 +271,9 @@ type BindZoneParam = {
   operatorOs: string;
   source: SourceType;
   network: NetWork;
-  // sign: string;
-} & RgBindZoneParams;
+}
+
+type BindZoneParam = BindZonePlatformParams & RgBindZoneParams;
 
 interface PaymentConfig {
   /** 平台方分配给游戏的appId */
@@ -267,13 +283,13 @@ interface PaymentConfig {
   /** 平台用户ID */
   userId: number
   /** 游戏内角色id */
-  roleId: number
+  roleId: string
   /** 0=ios 1=android */
   source: SourceType
   /* 网络 0=wifi 1 = 3g 2=其他 */
   network: NetWork
   /** 角色等级 */
-  level: number
+  level: string
   /** 游戏版本 控制每种支付方式的开关 */
   version: string
   /** 游戏币数量 */
@@ -294,20 +310,25 @@ interface Product {
   gameCoin: number;
   // 游戏货币单位
   gameCurrency: string;
-  // 商品类型：0=普通商品，1=月卡，2=年卡......
+  /* 商品类型 0~10 普 通商品，其他按需 分配 */
   itemType: number;
-  // 商品描述
+  // 商品描述，显示的商品名，支持富文本
   productDesc: string;
-  // 商品名
+  /* 商品名称（对应研 发商品 id） */
   productName: string;
   // 货币单位的缩写，$
   shortCurrency: string;
 }
 export interface PaymentChannel {
+  /* 支付方式的显示的名称 */
   name: string;
+  /* "description": "短代" 支付方式的描述 */
   description: string;
+  /* 支付渠道 */
   channel: number;
+  /* 支付方式 code 值 */
   code: number;
+  /* 支付方式 icon图片 */
   codeImg: string;
   // 推荐位图片名称
   hotImg?: string;
@@ -317,12 +338,15 @@ export interface PaymentChannel {
   showProductList: 0 | 1;
   //显示方式：0=打开网页 1=显示序列号和PIN 2=显示PIN 3=调起SDK不显示支付界面的确认界面（不可修改金额）） 4=九宫格展现 5 = 调起SDK 显示支付界面的确认界面（可修改支付金额，如短代） 6= 显示内容，
   showMethod: 0 | 1 | 2 | 3 | 4 | 5 | 6;
+  /* "exInfo": "vietnamANPAY" */
   exInfo: string;
+  /* 0=第三方，1=官方 */
   isOfficial: number;
   //选中的商品
   selectedProduct: Product;
   //商品列表
   products: Product[];
+  /* 支付渠道 */
   nodes?: PaymentChannel[];
 
   isFacebook?: boolean;
@@ -399,97 +423,88 @@ interface createOrderRes extends ServerRes {
     returnInfo: String
   }
 }
-
 interface finishedOrderParams {
   /** 交易流水 */
-  transactionId: string
+  transactionId: string;
   /** APPSTORE单据或者Google play signatureData */
-  receipt: string
+  receipt: string;
   /** Google play signature */
-  signature: string
+  signature: string;
   /** 支付方式 0=appstore 1=google play 2=vnpt 3=1pay 4=mol 28=facebook */
-  channel: number
+  channel: number;
   /** 包ID */
-  advChannel: number
+  advChannel: number;
   /** SDK版本 */
-  sdkVersion: string
+  sdkVersion: string;
   /** 客户端提交时间 "yyyy-MM-dd hh:mm:ss" */
-  clientTime: string
+  clientTime: string;
   /** 参数签名结果 MD5(transactionId + receipt + signature + channel + advChannel + app_key) */
   // sign: string
   /** 设备号 */
-  deviceNo: string
+  deviceNo: string;
   /** Android: MAC地址 IOS: IDFA */
-  device: string
+  device: string;
   /** 网络 0 = wifi 1 = 3g 2 = 其他 */
-  network: number
+  network: number;
   /** 机型 */
-  model: string
+  model: string;
   /** 操作系统，例如Android4.4 */
-  operatorOs: string
+  operatorOs: string;
   /** 游戏版本 */
-  version: string
+  version: string;
   /** 额外的信息 */
-  exInfo?: string
+  exInfo?: string;
 }
-
 interface finishedOrderRes extends ServerRes {
   // double	成功，则返回金额（实际支付金额）
-  money: number
+  money: number;
   // String	成功，则返回货币（实际支付货币）
-  currency: string
+  currency: string;
   // 	String	交易ID
-  transactionId: string
+  transactionId: string;
 }
-
-
-
-
 interface getPaymentHistoryParams {
   // 平台方分配给游戏的appId
-  appId: number
+  appId: number;
   // 用户ID
-  userId: number
+  userId: number;
   // 	第一次传空，第二次传服务器返回的时间戳
-  lastTime: string
+  lastTime: string;
   // MD5(appId+userId+appKey)
   // sign:string
 }
 interface getPaymentHistoryRes extends ServerRes {
-  lastTime: string
+  lastTime: string;
   data: {
     // 交易流水
-    transactionId: string
+    transactionId: string;
     // 金额
-    amount: string
+    amount: string;
     // 货币类型
-    currency: string
+    currency: string;
     // 付方式 0=官方1=刮刮卡
-    channel: number
+    channel: number;
     // 	200成功，错误请见错误列表
-    status: number
+    status: number;
     // chargingType 0=平台币 1=直冲
-    chargingType: number
+    chargingType: number;
     // 客户端时间
-    clientDate: number
+    clientDate: number;
   }[]
 }
-
-
 interface bindVisitorParams {
-  appId: number
+  appId: number;
   // 游客的用户ID
-  userId: number
+  userId: number;
   // 绑定的用户名
-  userName: string
+  userName: string;
   // 绑定的密码
-  password: string
+  password: string;
   // 电子邮箱
-  email: string
+  email: string;
   // MD5(appId+userId+userName+password+appKey)
   // sign: string
 }
-
 interface bindVisitorRes extends ServerRes {
   // 游客账号绑定的测试结果
   //   data	{…}
@@ -503,22 +518,21 @@ interface bindVisitorRes extends ServerRes {
 
   data: {
     // 用户ID
-    userId: number
+    userId: number;
     // 用户名
-    userName: string
+    userName: string;
     // 电子邮箱
-    email?: string
+    email?: string;
     // 电话号码
-    phoneNumber?: string
+    phoneNumber?: string;
     // 电子邮箱是否验证 0=未设置 1=未验证 2=已验证
-    emailValid: 0 | 1
+    emailValid: 0 | 1;
     // 用户类型1.正式账号 0.游客账号
-    userType: 0 | 1
+    userType: UserType;
     // 账户类型0. 普通用户  1.Email用户 2 fb账号 3.gamecent账号 4. Google账号 5.line账号 6.vk账号
-    accountType: AccountType
+    accountType: AccountType;
   }
 }
-
 interface changePassword {
   appId: number
   // 用户ID
@@ -558,7 +572,6 @@ interface initNativeSDKParams {
   /** 参数签名结果 MD5(appId+source+advChannel+app_key) */
   // sign: string;
 }
-
 interface initNativeSDKRes extends ServerRes {
   messages: {
     loginMessageUrl: string
@@ -600,7 +613,6 @@ interface initNativeSDKRes extends ServerRes {
   }
 
 }
-
 interface initWebSdkParams {
   /** 平台方分配给游戏的appId */
   appId: string;
@@ -620,8 +632,33 @@ interface initWebSdkRes extends ServerRes {
 
   }
 }
+// https://sdk-test.changic.net.cn/pocketgames/client/user/forgetPwd/10183/gtest/000ad20ed2da714d05c58cf3521c8cce
+interface forgetPwdParams {
+  appId: string;
+  userName: string;
+  // MD5(appId+userName+appKey)
+  // sign:string;
+}
+interface forgetPwdRes extends ServerRes {
+  data: {
+    // 用户id
+    userId: number;
+    // 用户名
+    userName: string;
+    // 邮箱
+    email: string;
+    // 电话号
+    phoneNumber: string
+    // 邮箱是否验证，0=未设置 1=未验证 2=已验证
+    emailValid: number
+    // 1.正式账号 0.游客账号
+    userType: UserType;
+    // 账号类型
+    accountType: Account;
+  }
+}
 
-/*
+{/*
 游客登录
 不要用户名
 https://sdk-test.changic.net.cn/pocketgames/client/user/v3/register
@@ -652,4 +689,4 @@ token	383724bdea99472492ea1ec36fb51e96
 firstLogin	false
 code	200
 error_msg
-*/
+*/}

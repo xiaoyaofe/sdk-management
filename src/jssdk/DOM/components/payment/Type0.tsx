@@ -32,17 +32,17 @@ export default class Type0 extends React.Component<paymentProps, {}, any>  {
   // }
 
   async componentDidMount() {
-    if (Utils.getUrlParam('pay')) {
-      console.log('发货请求中', this.props.Payment.state.paymentDatas[0])
-      Http.instance.get({
-        route: '/order/sendGoods?OrderId=' + this.props.Payment.state.paymentDatas[0].transactionId
-      }).then(res => {
-        if (res.code === 200) {
-          RG.jssdk.App.hidePayment()
-          RG.jssdk.App.showNotice('send success~~~')
-        }
-      })
-    }
+    /*  if (Utils.getUrlParam('pay')) {
+       console.log('发货请求中', this.props.Payment.state.paymentDatas[0])
+       Http.instance.get({
+         route: '/order/sendGoods?OrderId=' + this.props.Payment.state.paymentDatas[0].transactionId
+       }).then(res => {
+         if (res.code === 200) {
+           RG.jssdk.App.hidePayment()
+           RG.jssdk.App.showNotice('send success~~~')
+         }
+       })
+     } */
   }
 
   render() {
