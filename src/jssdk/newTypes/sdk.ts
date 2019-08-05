@@ -24,6 +24,7 @@ export class Base {
   protected reactInitPromise: Promise<void>;
   protected reactDomAndRouterPromise: Promise<void[]>;
   protected domPromise: Promise<any>;
+  protected configPromise: Promise<any>;
   utils = Utils;
   type: string;
   constructor(region: Region) {
@@ -32,16 +33,16 @@ export class Base {
       return this.loadScript(src)
     }));
     this.domPromise = import('DOM/index');
+    // 初始化config
+    //this.configPromise =  this.api.getInitConfig();
     this.api = new SdkApi(region);
     this.account = new Account();
     this.pay = new Payment();
   }
-  baseInit(data: { user: User, users: Users }) {
-    // 初始化config
-    // this.api.getInitConfig();
+  async baseInit() {
+    this.config = await this.configPromise;
     this.api.init(this.config.appKey);
     this.login = new Login(this.config.fbAppId, this.api);
-    this.account.init(data);
   }
   // 在JSToNative上挂载一个方法
   getDeviceMsgAsync: () => Promise<NativeDeviceMsg>;

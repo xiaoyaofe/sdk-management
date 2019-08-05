@@ -244,7 +244,7 @@ RG.Mark(markName: string, param?: {google?: object, adjust?: object, currency?: 
 RG.Install && RG.Install() 
 ```
 
-## 修改账号的事件接口
+## 切换账号的事件接口
 
 * **RG.ChangeAccount**
 

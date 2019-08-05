@@ -17,9 +17,10 @@ export class Web extends Base {
     await this.reactInitPromise;
     await this.reactDomAndRouterPromise;
     this.App = await this.domPromise;
-    // this.account.user =
-    // this.baseInit({});
-
+    const data = await this.getUser();
+    this.account.init(data as { user: User, users: Users });
+    await this.baseInit();
+    
   }
   autoLogin() {
     let autoLogin = false;
@@ -79,7 +80,7 @@ export class Web extends Base {
   }
   // 获取用户信息
   getUser() {
-    return new Promise((resolve, reject) => {
+    return new Promise<{ user: User | "", users: Users | {} }>((resolve, reject) => {
       const userStr = this.getItem(localStorageUserKeys.user);
       const usersStr = this.getItem(localStorageUserKeys.users);
       let data: { user: User | "", users: Users | {} };
@@ -107,11 +108,12 @@ export class Web extends Base {
   initIndexOrigin() {
     const indexUrl = this.config.index_formal;
     this.indexOrigin = /(http|https):\/\/(www.)?([A-Za-z0-9-_]+(\.)?)+/.exec(indexUrl)[0];
+    var that = this;
     window.addEventListener("message", onMessage(this.indexOrigin), false);
     function onMessage(indexUrl: string) {
       return function (event: MessageEvent) {
         if (event.origin !== /(http|https):\/\/(www.)?([A-Za-z0-9-_]+(\.)?)+/.exec(indexUrl)[0]) return;
-        RG.jssdk.Account.init(JSON.parse(event.data));
+        that.getUserPromiseResolve(JSON.parse(event.data));
       }
     }
   }
