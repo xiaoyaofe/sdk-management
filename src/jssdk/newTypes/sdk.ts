@@ -26,7 +26,7 @@ export class Base {
   protected domPromise: Promise<any>;
   protected configPromise: Promise<any>;
   utils = Utils;
-  type: string;
+  sdkType: string;
   constructor(region: Region) {
     this.reactInitPromise = this.loadScript(reactSrc);
     this.reactDomAndRouterPromise = Promise.all([reactDomSrc, reactRouterDomSrc].map((src) => {

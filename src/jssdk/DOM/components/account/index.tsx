@@ -32,8 +32,8 @@ class Main extends React.Component<accountProps, any, any> {
           resolve()
         }, 1000)
       })
-    ])
-    window.RG.Redirect()
+    ]);
+    window.RG.Redirect();
   }
 
   render() {

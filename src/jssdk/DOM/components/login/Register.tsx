@@ -230,3 +230,24 @@ export default class Register extends React.Component<RegisterProp, {}, any>  {
   }
 
 }
+
+const Input = (props: any) => {
+  return <div className="line-input username"
+  /*  onBlur={() => this.blurInput("userName")}
+   onFocus={() => this.focusInput("userName")} */
+  >
+    <div className="icon"></div>
+    <input type="text" placeholder={RG.jssdk.config.i18n.dom001}
+      value={this.state.userName}
+      onChange={(e) => this.onChange(e)}
+      onBlur={() => this.blurInput("userName")}
+      onFocus={() => this.focusInput("userName")}
+      id="userName" />
+    <div
+      className={"icon-close "
+        + (this.state.closeUser ? "active" : '')
+      }
+      onClick={this.clearUser}
+    ></div>
+  </div>
+}

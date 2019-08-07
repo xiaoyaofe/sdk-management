@@ -62,13 +62,18 @@ export const Utils: Utils = {
   deviceType: DeviceManager.instance.getDeviceTypes(),
   loadJs
 }
+export function getAccountType(userType: number/* UserType */, accountType: /* AccountType */number) {
 
+  if (accountType === 2) return "fb";
+  if (userType === 0) return "guest";
+  return "sdk";
+}
 export interface Utils {
   formatDate: () => string;
   urlParamsManager: UrlParmasManager;
   deviceManager: DeviceManager;
   getAccountType: (userType: number, account: number) => string;
-  generateGpsAdid: (len?: number, radix?: number) => string;
+  // generateGpsAdid: (len?: number, radix?: number) => string;
   signed: (params) => string;
   getUrlParam: (name?: string) => any;
   deviceType: {

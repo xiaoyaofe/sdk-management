@@ -42,3 +42,4 @@
 
 注意事项：
 1. sdk_purchased_done 这个点的点名不能改变的，在微端根据这个点名来判断进行购买打点
+2. 每次对接之前给游戏方提供appId，advChannel，sdkVersion，和region测试，或者直接提供一个测试的页面来测试

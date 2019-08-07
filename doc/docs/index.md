@@ -4,62 +4,49 @@
 
 ## 快速入门
 
-JavaScript 版 SDK 无需下载和安装任何独立文件，您只需在 HTML 中添加一小段正确的 JavaScript，即可将 SDK 异步加载至您的页面。异步加载不会阻止浏览器加载页面的其他元素。
+JavaScript 版 SDK 无需下载和安装任何独立文件，您只需在 HTML 中添加一小段正确的 JavaScript，即可将 SDK 加载至您的页面。
 
-以下代码片段将提供基础版的 SDK，其中的选项将设置为最常用的默认设置。请直接将此代码片段插入想要加载 SDK 的每个页面的开始 `<body>` 标签之后：
+以下代码片段将提供基础版的 SDK。请直接将此代码片段插入想要加载 SDK 的每个页面的开始 `<body>` 标签之后：
 
 ```js
-/**
- * GET 参数获取
- * @param name 参数名称
- */
-var getUrlParam = (function () {
-  var urlParamMap = {};
-  var interrogationIndex = location.href.indexOf("?") + 1;
-  var str = interrogationIndex === 0 ? "" : location.href.slice(interrogationIndex);
-  if (str) {
-    var arr = str.split(/&|%26/);
-    arr.forEach(item => {
-      var arr = item.split(/=|%3D/);
-      var key = arr[0];
-      var val = arr[1];
-    })；
-  }
-  return function (name) {
-    return urlParamMap.hasOwnProperty(name) ? urlParamMap[name] : null;
-  }
-})()
-// 查询参数debugger，区分测试服和正式服
-var isDebugger = getUrlParam('debugger') || window.debugger;
-// 根据sdk的版本来去加载sdk
-var sdkVersion = getUrlParam('sdkVersion') || window.sdkVersion;
 
 // 游戏方实现的函数，在登录完成后会调用，请在加载sdk之前实现
 window.rgAsyncInit = function () {
+  // 获取用户信息
   var user = RG.CurUserInfo()
 }
 
 /** 加载jsssdk */
-var src = 'https://sdk-test.changic.net.cn/jssdk/' + sdkVersion + '/sdk.js?t='+ Date.now();
 (function (d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
+  // 提供获取地址栏查询参数的一个函数
+  var u = (function () {
+    var i = location.href.indexOf("?") + 1;
+    var t = i === 0 ? "" : location.href.slice(i);
+    if(!t) return (k) => null;
+    var p = t.split(/&|%26/).reduce((o,t) => {
+      var a = t.split(/=|%3D/);
+      o[a[0]] = a[1];
+      return o;
+    },{});
+    return (k) => p.hasOwnProperty(k) ? p[k] : null;
+  })();
+  // 根据region来加载 对应地区的sdk,jssdk静态文件地址: ${HOST}/jssdk/${GET.sdkVersion}/sdk.js
+  var hosts = {
+    sg: 'https://sdk-sg.pocketgamesol.com',
+    de: 'https://sdk-de.pocketgamesol.com',
+    vn: 'https://sdk-vn.pocketgamesol.com',
+    test: 'https://sdk-test.changic.net.cn'
+  };
+
   if (d.getElementById(id)) return;
-  js = d.createElement(s);
+  var js = d.createElement(s), fjs = d.getElementsByTagName(s)[0];
   js.id = id;
-  js.src = src
+  js.src = hosts[u('region')] + '/jssdk' + u('sdkVersion') + '/sdk.js?t='+ Date.now();
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'rg-jssdk'));
-```
 
 ```
-德国的sdk主机域名     https://sdk-de.pocketgamesol.com
-新加坡的sdk主机域名   https://sdk-sg.pocketgamesol.com
-越南的sdk主机域名     https://sdk-vn.pocketgamesol.com
 
-测试的sdk主机域名     https://sdk-test.changic.net.cn
-
-jssdk静态文件地址     ${HOST}/jssdk/${GET.sdkVersion || window.sdkVersion}/sdk.js
-```
 ## 登录
 
 在SDK加载完成以后 SDK会自动调起登录弹窗等相关操作，用户可在弹窗中进行登录注册操作，登录/注册完毕后会将数据保存在本地localstorage中, 然后执行全局初始化函数 rgAsyncInit

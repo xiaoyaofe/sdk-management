@@ -38,7 +38,7 @@ export default class Api {
     })
   }
 
-  public BindVisitor(account: string, password: string) {
+  public aBindVisitor(account: string, password: string) {
     var data = {
       appId: RG.jssdk.config.appId,
       userId: RG.CurUserInfo().userId,

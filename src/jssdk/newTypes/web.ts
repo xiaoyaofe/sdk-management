@@ -7,7 +7,7 @@ export class Web extends Base {
   indexOrigin: string;
   isMobile: boolean;
   getUserPromiseResolve: Function;
-  type = "web";
+  sdkType = "web";
   constructor(region: Region) {
     super(region);
     this.isMobile = isMobile();
@@ -20,8 +20,8 @@ export class Web extends Base {
     const data = await this.getUser();
     this.account.init(data as { user: User, users: Users });
     await this.baseInit();
-    
   }
+  // 自动登录
   autoLogin() {
     let autoLogin = false;
     const user = this.account.user;
@@ -86,11 +86,15 @@ export class Web extends Base {
       let data: { user: User | "", users: Users | {} };
       try {
         data.user = JSON.parse(userStr);
-        data.users = JSON.parse(usersStr);
       } catch (e) {
         console.log(e);
         data.user = "";
-        data.users = {}
+      }
+      try {
+        data.users = JSON.parse(usersStr);
+      } catch (e) {
+        console.log(e);
+        data.users = {};
       }
       if (data.user) {
         resolve(data);
