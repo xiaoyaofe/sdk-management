@@ -9,9 +9,11 @@
     "lib": ["es6", "es7", "dom"],
     "esModuleInterop": true,
     "paths": {
-      "Src/*": ["./src/jssdk/*"],
+      "Src/*": ["./src/*"],
+      "SDK/*": ["./src/jssdk/*"],
       "DOM/*": ["./src/jssdk/DOM/*"],
-      "Base/*": ["./src/jssdk/Base/*"]
+      "Base/*": ["./src/jssdk/Base/*"],
+      "New/*": ["./src/new_jssdk/*"]
     }
   },
   "include": [

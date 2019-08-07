@@ -4,7 +4,7 @@ import * as React from 'react'
 import Payment from 'DOM/components/payment'
 import { History } from 'history'
 import { Utils } from "../../../utils";
-import Http from 'Src/Base/Http';
+import Http from 'src/old_jssdk/Base/Http';
 
 type paymentProps = {
   Payment: Payment

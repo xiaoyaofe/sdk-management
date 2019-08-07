@@ -1,7 +1,7 @@
 /*
   引入文件类型
 */
-import { SdkApi, RegisterRemainingParams, RegisterParams } from "Src/api";
+import { SdkApi, RegisterRemainingParams, RegisterParams } from "../api";
 
 export class Login {
   fbAppId: string;

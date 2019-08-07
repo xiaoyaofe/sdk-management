@@ -1,6 +1,6 @@
-import { User, Users } from "Src/new_Base/account"
-import { localStorageUserKeys } from "Src/config/Const"
-import { Web } from "Src/newTypes/web"
+import { User, Users } from "../common/account"
+import { localStorageUserKeys } from "../config/Const"
+import { Web } from "../sdks/web"
 export function $postMessage(paramsStr: string, web: Web) {
   let params: any;
   try {

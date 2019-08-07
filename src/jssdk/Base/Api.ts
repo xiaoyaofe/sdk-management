@@ -1,6 +1,6 @@
-import * as Const from "Src/Base/Constant"
-import { Utils } from "../utils";
-import Http from "Src/Base/Http";
+import * as Const from "Base/Constant"
+import Utils from "Base/Utils";
+import Http from "Base/Http";
 
 export default class Api {
   static _ins: Api
@@ -38,7 +38,7 @@ export default class Api {
     })
   }
 
-  public aBindVisitor(account: string, password: string) {
+  public BindVisitor(account: string, password: string) {
     var data = {
       appId: RG.jssdk.config.appId,
       userId: RG.CurUserInfo().userId,

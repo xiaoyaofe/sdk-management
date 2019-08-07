@@ -1,5 +1,5 @@
-import { Utils } from "../utils";
-import Http from "Src/Base/Http";
+import Utils from "Base/Utils";
+import Http from "Base/Http";
 import { DOT } from "./Constant";
 
 export default class Login {

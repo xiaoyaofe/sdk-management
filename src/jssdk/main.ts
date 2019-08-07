@@ -1,8 +1,8 @@
 import { DOT, GET, ERROR } from "Base/Constant";
-import { checkJsToNative } from "Src/adapter";
-import Web from "./Web";
-import Native from "./Native";
-import Config from "./config";
+import { checkJsToNative } from "SDK/adapter";
+import Web from "SDK/Web";
+import Native from "SDK/Native";
+import Config from "SDK/config";
 import Languages from "DOM/i18n";
 
 init(window);
@@ -23,7 +23,7 @@ function init(window: Window) {
       RG.jssdk.fb_sdk_loaded = true;
     });
     // 在本地测试的时候，修改$postMessage
-    IS_DEV && (await import("./dev"));
+    IS_DEV && (await import("SDK/dev"));
     const indexUrl = (IS_DEV || IS_TEST) ? config.page.index.test : config.page.index.formal;
     if (config.type !== 2) {
       window.$postMessage(JSON.stringify({ action: "get" }), /(http|https):\/\/(www.)?([A-Za-z0-9-_]+(\.)?)+/.exec(indexUrl)[0]);
@@ -107,19 +107,19 @@ function init(window: Window) {
     let sdk: Web | Native;
     switch (sdkType) {
       case 1:
-        await import("Src/Web").then(module => {
+        await import("SDK/Web").then(module => {
           sdk = new module.default(config, false);
         });
         break;
       case 2:
-        await import("Src/Native").then(module => {
+        await import("SDK/Native").then(module => {
           sdk = new module.default(config, false);
         })
         break;
       case 3:
-        return import("Src/FacebookWebGames");
+        return import("SDK/FacebookWebGames");
       case 4:
-        return import("Src/FacebookInstantGames");
+        return import("SDK/FacebookInstantGames");
     }
     return sdk;
   }

@@ -101,14 +101,14 @@ function init(window: Window) {
           });
           break;
         case 2:
-          await import("Src/Native").then(module => {
+          await import("src/old_jssdk/Native").then(module => {
 
           })
           break;
         case 3:
-          return import("Src/FacebookWebGames");
+          return import("src/old_jssdk/FacebookWebGames");
         case 4:
-          return import("Src/FacebookInstantGames");
+          return import("src/old_jssdk/FacebookInstantGames");
       }
       return sdk;
     }
