@@ -11,16 +11,18 @@ function init(w: Window) {
   const advChannel = urlParams.advChannel;
   const sdkVersion = urlParams.sdkVersion;
   const region = urlParams.region;
-
-  if (!appId || !advChannel) return;
+  // 如果没有appId和advChannel 抛出错误
+  if (!appId || !advChannel) throw "appId or advChannel is not find."
   // 打补丁
   polyfill();
   // 是否加载移动端log工具
   urlParams["debugger"] && initDebugger();
-  // 加载对应类型的sdk
+  // 获取sdk类型
   let type = getSdkType(advChannel);
+  // 根据类型加载对应的sdk
   const sdk = loadSdkWithType(type, region).then((res => {
-    
+    res.init({ appId, advChannel, sdkVersion, region });
+    return res
   }));
   // 初始化RG
 
@@ -28,9 +30,9 @@ function init(w: Window) {
   // var fbInitPromise = fbSdkLoad();
 
   // 初始化w.RG
-  function exposeApis() {
+  function exposeApis(sdk: Web) {
     let RG = function () { };
-    RG.prototype.jssdk = this;
+    RG.prototype.jssdk = sdk;
     w.RG = new RG();
 
     // w.RG[api] = RG.jssdk[api]

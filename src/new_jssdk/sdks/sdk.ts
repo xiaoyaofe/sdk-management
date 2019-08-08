@@ -39,8 +39,12 @@ export class Base {
     this.account = new Account();
     this.pay = new Payment();
   }
-  async baseInit() {
+  async baseInit({ appId, advChannel, sdkVersion, region }) {
     this.config = await this.configPromise;
+    this.config.appId = appId;
+    this.config.advChannel = advChannel;
+    this.config.sdkVersion = sdkVersion;
+    this.config.region = region
     fbSdkLoad(this.config.fb_appid).then(() => {
       this.facebookSDKInit = true;
     })

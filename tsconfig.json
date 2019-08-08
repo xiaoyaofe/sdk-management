@@ -13,7 +13,7 @@
       "SDK/*": ["./src/jssdk/*"],
       "DOM/*": ["./src/jssdk/DOM/*"],
       "Base/*": ["./src/jssdk/Base/*"],
-      "New/*": ["./src/new_jssdk/*"]
+      "New/*": ["src/new_jssdk_test/*"]
     }
   },
   "include": [

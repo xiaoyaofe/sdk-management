@@ -14,13 +14,13 @@ export class Web extends Base {
     this.isMobile = isMobile();
   }
 
-  async init() {
+  async init({ appId, advChannel, sdkVersion, region }) {
     await this.reactInitPromise;
     await this.reactDomAndRouterPromise;
     this.App = await this.domPromise;
     const data = await this.getUser();
     this.account.init(data as { user: User, users: Users });
-    await this.baseInit();
+    await this.baseInit({ appId, advChannel, sdkVersion, region });
   }
   // 自动登录
   autoLogin() {
@@ -105,6 +105,7 @@ export class Web extends Base {
       }
     })
   }
+  // 为了打点的准确性和保存到首页，获取不到用户信息做出的更改
   $postMessage(action: "set" | "get" | "mark", params?: any) {
 
     const data = JSON.stringify({ action, data: params });
