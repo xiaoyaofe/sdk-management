@@ -5,7 +5,7 @@ import * as React from 'react'
 import { Route } from 'react-router-dom'
 import Login from 'DOM/components/login'
 import { Ins } from 'DOM/index'
-import { Utils } from "../../../utils";
+import  Utils  from "Base/Utils";
 
 type ChooseProps = {
   Login: Login

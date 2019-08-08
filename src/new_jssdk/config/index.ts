@@ -1,9 +1,14 @@
 const hy_default = {
+  // 游戏名
   name: '火影忍者H5',
+  // facebook Id 登录分享使用
   fb_appid: "663857194035716",
+  // 语言
   language: "TW",
   hoverTop: ".24",
   hover_left: true,
+  // 横竖屏,竖屏：“portrait”，横屏：“landscape”
+  orientation: "portrait",
   app_key: "40af84c65b7d45439e2d3e102ba85bce",
   // 游戏首页正式地址
   homepage: "https://www.narutoh5game.com/h5-plays/index.html",
@@ -18,7 +23,10 @@ const hy_default = {
   // google商店地址
   download_android: "https://play.google.com/store/apps/details?id=com.fengkuangzhi.renzhe",
   // appStore的地址
-  download_ios: "https://apps.apple.com/tw/app/id1466051116"
+  download_ios: "https://apps.apple.com/tw/app/id1466051116",
+  adjust: {
+
+  }
 };
 const hy_ios_0 = {
   name: '火影忍者H5',
@@ -26,6 +34,8 @@ const hy_ios_0 = {
   language: "TW",
   hoverTop: ".24",
   hover_left: true,
+  // 横竖屏,竖屏：“portrait”，横屏：“landscape”
+  orientation: "portrait",
   app_key: "40af84c65b7d45439e2d3e102ba85bce",
   // 游戏首页正式地址
   homepage: "https://www.narutoh5game.com/h5-plays/index.html",
@@ -71,6 +81,8 @@ const hy_google_1 = {
   language: "TW",
   hoverTop: ".24",
   hover_left: true,
+  // 横竖屏,竖屏：“portrait”，横屏：“landscape”
+  orientation: "portrait",
   app_key: "40af84c65b7d45439e2d3e102ba85bce",
   // 游戏首页正式地址
   homepage: "https://www.narutoh5game.com/h5-plays/index.html",

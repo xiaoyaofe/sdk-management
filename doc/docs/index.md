@@ -30,6 +30,7 @@ window.rgAsyncInit = function () {
     },{});
     return (k) => p.hasOwnProperty(k) ? p[k] : null;
   })();
+  if(!u('region') || !u('sdkVersion')) return throw "region or sdkVersion is not find."
   // 根据region来加载 对应地区的sdk,jssdk静态文件地址: ${HOST}/jssdk/${GET.sdkVersion}/sdk.js
   var hosts = {
     sg: 'https://sdk-sg.pocketgamesol.com',

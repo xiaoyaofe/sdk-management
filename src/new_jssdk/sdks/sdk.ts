@@ -1,15 +1,15 @@
 /*
     类型文件引入
 */
-import { User, Users } from 'Src/new_Base/account';
-import { createOrderProductInfo, finishOrderParams } from 'Src/new_Base/payment';
+import { User, Users } from '../common/account';
+import { createOrderProductInfo, finishOrderParams } from '../common/payment';
 import App from 'DOM/App';
 // 文件引入
-import { SdkApi } from 'Src/api';
-import { Login } from 'Src/new_Base/login';
-import { Account } from 'Src/new_Base/account';
-import { Payment } from 'Src/new_Base/payment';
-import { Utils } from 'Src/utils';
+import { SdkApi } from '../api';
+import { Login } from '../common/login';
+import { Account } from '../common/account';
+import { Payment } from '../common/payment';
+import { loadJs, dateFormat } from '../utils';
 
 export class Base {
   protected App: App
@@ -19,14 +19,14 @@ export class Base {
   protected pay: Payment;
 
   protected config: any;
-  protected facebookSDKInit: boolean = false;
+  facebookSDKInit: boolean = false;
   protected kaKaoSDKInit: boolean = false;
   protected reactInitPromise: Promise<void>;
   protected reactDomAndRouterPromise: Promise<void[]>;
   protected domPromise: Promise<any>;
   protected configPromise: Promise<any>;
-  utils = Utils;
   sdkType: string;
+
   constructor(region: Region) {
     this.reactInitPromise = this.loadScript(reactSrc);
     this.reactDomAndRouterPromise = Promise.all([reactDomSrc, reactRouterDomSrc].map((src) => {
@@ -41,6 +41,9 @@ export class Base {
   }
   async baseInit() {
     this.config = await this.configPromise;
+    fbSdkLoad(this.config.fb_appid).then(() => {
+      this.facebookSDKInit = true;
+    })
     this.api.init(this.config.appKey);
     this.login = new Login(this.config.fbAppId, this.api);
   }
@@ -107,7 +110,7 @@ export class Base {
   async createOrder(params: createOrderProductInfo) {
     const { appId, advChannel, sdkVersion } = this.config;
     const { device, deviceNo, version, model, operatorOs, source, network } = await this.getDeviceMsgAsync();
-    const createOrderBaseParams = { appId, advChannel, source, deviceNo, device, network, model, operatorOs, version, sdkVersion, clientTime: this.utils.formatDate() };
+    const createOrderBaseParams = { appId, advChannel, source, deviceNo, device, network, model, operatorOs, version, sdkVersion, clientTime: dateFormat() };
     const result = await this.pay.createOrder(createOrderBaseParams, params);
     if (!result) return;
     return result;
@@ -116,7 +119,7 @@ export class Base {
   async finishOrder(params: finishOrderParams) {
     const { advChannel, sdkVersion } = this.config;
     const { device, deviceNo, version, model, operatorOs, network } = await this.getDeviceMsgAsync();
-    const finishOrderBaseParams = { advChannel, deviceNo, device, network, model, operatorOs, version, sdkVersion, clientTime: this.utils.formatDate() }
+    const finishOrderBaseParams = { advChannel, deviceNo, device, network, model, operatorOs, version, sdkVersion, clientTime: dateFormat() }
     const result = await this.pay.finishOrder(finishOrderBaseParams, params);
     if (!result) return;
     return result;
@@ -156,7 +159,7 @@ export class Base {
   loadScript(url: string) {
 
     return new Promise<void>((resolve, reject) => {
-      this.utils.loadJs(url, {
+      loadJs(url, {
         success: resolve,
         error: reject
       })
@@ -180,6 +183,28 @@ export class Base {
     }
     return result;
   }
+}
+// facebook sdk 加载
+function fbSdkLoad(fbAppId: string) {
+
+  return new Promise((resolve, reject) => {
+    window.fbAsyncInit = function () {
+      FB.init({
+        appId: fbAppId,
+        status: true,
+        xfbml: true,
+        version: FBVersion
+      });
+      resolve();
+    };
+    (function (d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "https://connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+  })
 }
 
 

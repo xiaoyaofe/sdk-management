@@ -4,7 +4,7 @@ import { Switch, Route, Link } from 'react-router-dom'
 import { History, createLocation } from 'history'
 import { Ins } from 'DOM/index'
 import { match } from 'react-router-dom'
-import { Utils } from "../../../utils";
+import  Utils  from "Base/Utils";
 
 type accountProps = {
   match?: match<{ curPath: string }>

@@ -43,7 +43,6 @@ export class SdkApi {
   }
   // appKey 需初始化请求完成才能拿到，因此需要初始化
   init(appKey: string) {
-
     this.appKey = appKey;
   }
   // 平台登录
@@ -178,12 +177,9 @@ export class SdkApi {
   }
   // 未实现，一个jssdk的配置接口,暂时未使用
   getInitConfig(params: initWebSdkParams) {
-
-    console.log(params);
-    // this.logError('getPaymentHistory', e);
-    // this.appKey = params.appKey;
-    // return params;
+    return import("../config/index").then(res => res.config[params.appId][params.advChannel]).catch(e => console.log(e));
   }
+  // 忘记密码
   forgetPwd(params: forgetPwdParams): Promise<forgetPwdRes | void> {
     const { appId, userName } = params;
     // MD5(appId+userName+appKey)
@@ -616,16 +612,8 @@ interface initNativeSDKRes extends ServerRes {
 interface initWebSdkParams {
   /** 平台方分配给游戏的appId */
   appId: string;
-  /** 平台来源0=ios 1=android 2=网页支付 3=web */
-  source: SourceType;
-  /** -1=IOS企业包0=AppsSore 1=GooglePlay等等，具体渠道请见渠道表 */
+  /** 0=AppsSore 1=GooglePlay等等，具体渠道请见渠道表 */
   advChannel: string;
-  /** SDK 版本 */
-  sdkVersion: string;
-  /** 客户端时间 (yyyy-MM-dd HH:mm:ss) */
-  clientTime: string;
-  /** 参数签名结果 MD5(appId+source+advChannel+app_key) */
-  // sign: string;
 }
 interface initWebSdkRes extends ServerRes {
   data: {
