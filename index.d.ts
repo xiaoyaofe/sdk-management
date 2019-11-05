@@ -1,8 +1,22 @@
 
 
 declare const IS_TEST: boolean;
-// 1.正式账号 0.游客账号
+declare const Adjust: any;
+declare const QuickSDK: any;
+/* 账户类型0. 普通用户  1.Email用户 2 fb账号 3.gamecent账号 4. Google账号 5.line账号
+6.vk账号 */
+type AccountType = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 type UserType = 0 | 1;
+type Region = "test" | "sg" | "de" | "vn";
+// 平台来源 0 = ios 1 = android 2 = 网页支付 3 = PC web登录
+type SourceType = 0 | 1 | 2 | 3;
+// 网络 0=wifi 1 = 3g 2=其他
+type NetWork = 0 | 1 | 2;
+// 性别 0=男 1=女
+type Sex = 0 | 1;
+// 用户渠道 0=默认渠道 1=appota 2=mwork
+type UserChannel = 0 | 1 | 2;
+
 declare namespace JSSDK {
   /** 1: web端 2：原生应用 3：facebook页游平台 4：facebook instant games */
   type Type = 1 | 2 | 3 | 4;
@@ -30,7 +44,7 @@ declare namespace JSSDK {
     language: string;
     i18n: any;
     type: Type;
-    // 控制首次请求的地址，将来放在urlParams中有sg、de、vn三个值
+    // 控制首次请求的地址，将来放在urlParams中有sg、de、vn,或者test三个值
     region: string;
     // 悬浮球距离顶边的距离rem
     hoverTop: number
@@ -74,6 +88,16 @@ declare namespace JSSDK {
         index: string
       };
     };
+    urlParams: UrlParams;
+    /* 联运需要的参数 */
+    code?: number;
+    channel?: number;
+    userChannel?: number;
+    /*  联营的传3 */
+    accountType?: number;
+    appSecret?: string;
+    productCode?: string;
+    productKey?: string;
   }
 }
 
@@ -105,7 +129,7 @@ interface RG {
   Share(shareUrl: string);
 
   /** 绑定区服 */
-  BindZone(bindZoneParam: BindZoneParam): Promise<ServerRes>;
+  BindZone(bindZoneParam: BindZoneParam): Promise<Res>;
 
   Mark(markName: string, extraParam?: any): void;
 
@@ -121,9 +145,6 @@ declare interface Window {
   FBInstant: any;
   getLoginStatus: Promise<any>;
   rgAsyncInit: Function;
-  fbq: Function;
-  _fbq: Function;
-  dataLayer: any[];
   JsToNative: JsToNative;
   NativeToJs: NativeToJs;
   rgChangeAccount: Function;
@@ -140,7 +161,12 @@ declare interface Window {
     };
   };
   $postMessage: Function;
+  XMLHttpRequest: any;
   opera: any;
+  // 测试使用
+  _RG_REGION: string;
+  changePostmessageAndRegion: Function;
+  QuickSDK: any
 }
 
 declare var FBVersion: string;
@@ -389,7 +415,7 @@ interface Base0 {
   Share(shareUrl: string);
 
   /** 绑定区服 */
-  BindZone(bindZoneParam: BindZoneParam): Promise<ServerRes>;
+  BindZone(bindZoneParam: BindZoneParam): Promise<Res>;
 
   Account: any;
 
@@ -409,19 +435,19 @@ interface Base0 {
   // GetRedirectUrl()
 
   /** 修改当前账户密码 */
-  ChangePassword(oldpass: string, newpass: string): Promise<ServerRes>;
+  ChangePassword(oldpass: string, newpass: string): Promise<Res>;
 
-  VisitorUpgrade(username: string, pass: string): Promise<ServerRes>;
+  VisitorUpgrade(username: string, pass: string): Promise<Res>;
 
   /** 获取订单列表 */
-  GetPaymentHistory(): Promise<ServerRes>;
+  GetPaymentHistory(): Promise<Res>;
 
   /** 获取支付数据 */
   PaymentConfig(PaymentConfig: PaymentConfig): Promise<PaymentConfigRes>;
 
   Ordering(OrderingData: OrderingData, extraInfo?: any): Promise<OrderRes>;
 
-  FinishOrder(finishOrderParams: FinishOrderParams): Promise<ServerRes>;
+  FinishOrder(finishOrderParams: FinishOrderParams): Promise<Res>;
 }
 
 type Base = Base0;
@@ -485,15 +511,16 @@ declare namespace RG {
 }
 
 interface PaymentConfig {
-  gameOrderId: number;
+  userId: number;
   gameZoneId: number;
+  gameOrderId: number;
   roleId: number;
   roleName: string;
   level: number;
   gameCoin: number;
 }
 
-interface OrderRes extends ServerRes {
+interface OrderRes extends Res {
   data: {
     currency: string;
     money: number;
@@ -681,7 +708,12 @@ interface BindZoneParam {
   level: number;
 }
 
-interface PaymentConfigRes extends ServerRes {
+interface Res {
+  code: number;
+  error_msg: string;
+}
+
+interface PaymentConfigRes extends Res {
   payments: PaymentChannel[];
 }
 
@@ -724,7 +756,7 @@ interface LoginData {
   password?: string;
 }
 
-interface LoginRes extends ServerRes {
+interface LoginRes extends Res {
   data: LoginData;
   firstLogin: boolean;
   token: string;
@@ -766,6 +798,14 @@ interface requestParam {
 
 type PlatformLoginParam = LoginParam & DeviceMsg;
 type Methods = "POST" | "GET";
-
-
+interface UrlParams {
+  appId: string;
+  region: Region;
+  advChannel: string;
+  sdkVersion: string;
+  t: string;
+  debugger?: boolean;
+  advertiseId?: string;
+}
+/* 以下为新的类型 */
 

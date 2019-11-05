@@ -3,22 +3,15 @@ import Payment from "Base/Payment";
 import Login from "Base/Login";
 import Api from "Base/Api";
 import Account from "Base/Account";
+<<<<<<< HEAD:src/jssdk/Base.ts
+=======
+import { getUrlParam } from "Src/jssdk/utils";
+// import Mark from "Src/Base/Mark_old";
+>>>>>>> test:src/jssdk/Base/index.ts
 
 export default class Base {
 
   Account = Account.instance
-
-  Mark(markName: string, markParams: any) {
-    // Mark.instance.Mark(markName, markParams);
-    const index_origin = IS_DEV || IS_TEST ? window.$rg_main.config.page.index.test : window.$rg_main.config.page.index.formal;
-    window.$postMessage(JSON.stringify({
-      action: 'mark',
-      data: {
-        name: markName,
-        param: markParams
-      }
-    }), /(http|https):\/\/(www.)?([A-Za-z0-9-_]+(\.)?)+/.exec(index_origin)[0])
-  }
 
   Login(loginParam: LoginParam): Promise<LoginRes> {
     let promise: Promise<LoginRes>
@@ -40,7 +33,11 @@ export default class Base {
   }
 
   CurUserInfo = (): JSSDK.CurUserInfo => {
+<<<<<<< HEAD:src/jssdk/Base.ts
     return RG.jssdk.Account.user;
+=======
+    return RG.jssdk.Account.user || getUrlParam('user')
+>>>>>>> test:src/jssdk/Base/index.ts
   }
 
   Share(shareUrl: string) {
@@ -49,8 +46,7 @@ export default class Base {
 
   Messenger() {
     if (RG.jssdk.config.type === 1) {
-      if (isMobile()) window.open(RG.jssdk.config.page.facebook.index);
-      else window.open(RG.jssdk.config.page.facebook.messenger.pc);
+      window.open(RG.jssdk.config.page.facebook.index);
     } else {
       window.open(RG.jssdk.config.page.facebook.messenger.mobile);
     }
@@ -100,7 +96,7 @@ export default class Base {
     })
   }
 
-  FinishOrder(finishOrderParams: FinishOrderParams): Promise<ServerRes> {
+  FinishOrder(finishOrderParams: FinishOrderParams): Promise<Res> {
     return Payment.instance.finishOrder({
       transactionId: finishOrderParams.transactionId,
       channel: finishOrderParams.channel,

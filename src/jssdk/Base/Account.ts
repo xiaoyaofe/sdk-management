@@ -1,7 +1,13 @@
+<<<<<<< HEAD
 import Utils from "Base/Utils";
 import Http from "Base/Http";
 import * as Const from "Base/Constant";
 
+=======
+import { signed } from "../utils";
+import Http from "./Http";
+import * as Const from "./Constant";
+>>>>>>> test
 export default class Account {
   static _ins: Account;
   static get instance(): Account {
@@ -20,7 +26,7 @@ export default class Account {
   private _users: UsersInfo = {};
 
   initResolve;
-  _initPromise
+  _initPromise;
   initPromise() {
     if (RG.jssdk.config.type === 2) {
       this.init({
@@ -28,7 +34,7 @@ export default class Account {
         users: JSON.parse(localStorage.getItem('users'))
       })
     }
-    return this._initPromise
+    return this._initPromise;
   }
 
   init(data) {
@@ -94,12 +100,13 @@ export default class Account {
       sign: null
     };
 
-    data.sign = Utils.signed({
-      appId: RG.jssdk.config.appId,
-      userId: this.user.userId,
-      password: oldpass,
-      newPassword: newpass
-    });
+    data.sign = signed([
+      RG.jssdk.config.appId,
+      this.user.userId,
+      oldpass,
+      newpass,
+      RG.jssdk.config.app_key
+    ]);
 
     return Http.instance.post({
       route: Const.RouteChangePassword,

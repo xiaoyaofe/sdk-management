@@ -4,7 +4,7 @@ import { Switch, Route, Link } from 'react-router-dom'
 import { History, createLocation } from 'history'
 import { Ins } from 'DOM/index'
 import { match } from 'react-router-dom'
-import  Utils  from "Base/Utils";
+import { getAccountType } from 'Src/jssdk/utils';
 
 type accountProps = {
   match?: match<{ curPath: string }>
@@ -39,7 +39,7 @@ class Main extends React.Component<accountProps, any, any> {
   render() {
     var props = this.props
     var { userType, accountType } = RG.jssdk.Account.user;
-    const userTypeIsFB = Utils.getAccountType(userType, accountType) === 'fb';
+    const userTypeIsFB = getAccountType(userType, accountType) === 'fb';
 
     return <div className="info-main">
       <div className="info-account">
@@ -54,7 +54,7 @@ class Main extends React.Component<accountProps, any, any> {
             </span>
             {/* <span className="copy">Copy</span> */}
           </p>
-          <a className="pay-his" onClick={() => {
+          {/* <a className="pay-his" onClick={() => {
             RG.jssdk.GetPaymentHistory().then((data: any) => {
               if (data.data.length) {
                 props.history.push(createLocation('/payment-history', {
@@ -64,7 +64,7 @@ class Main extends React.Component<accountProps, any, any> {
                 Ins.showNotice(RG.jssdk.config.i18n.p2refresh_end_no_records)
               }
             })
-          }}>{RG.jssdk.config.i18n.txt_check_charge}</a>
+          }}>{RG.jssdk.config.i18n.txt_check_charge}</a> */}
         </div>
       </div>
       <div className="others">
@@ -82,7 +82,22 @@ class Main extends React.Component<accountProps, any, any> {
         </a>
         <a className="item-other" onClick={this.changeAccount}>
           <img src={require("DOM/assets/ui_switch_account.png")} />
-          <p>{RG.jssdk.config.i18n.dom011}</p>
+          <p>{RG.jssdk.config.i18n.dom003}</p>
+          <img src={require("DOM/assets/ui_right_arrow.png")} className="right" />
+        </a>
+        <a className="item-other" onClick={() => {
+          RG.jssdk.GetPaymentHistory().then((data: any) => {
+            if (data.data.length) {
+              props.history.push(createLocation('/payment-history', {
+                data
+              }))
+            } else {
+              Ins.showNotice(RG.jssdk.config.i18n.p2refresh_end_no_records)
+            }
+          })
+        }}>
+          <img src={require("DOM/assets/fb_user_center_0.png")} className="pay-his-icon" />
+          <p>{RG.jssdk.config.i18n.txt_check_charge}</p>
           <img src={require("DOM/assets/ui_right_arrow.png")} className="right" />
         </a>
       </div>
@@ -221,6 +236,7 @@ class PaymentHistory extends React.Component<accountProps, {}, {}> {
   }
 
   render() {
+    console.log(this.state.list);
     if (this.state.list.length) {
       return <div className="order-list">
         {
@@ -232,7 +248,7 @@ class PaymentHistory extends React.Component<accountProps, {}, {}> {
               </div>
               <div className="order-line">
                 <p className="order-blue">{RG.jssdk.config.i18n.txt_charge_way_tips}</p>
-                <p>{RG.jssdk.config.type === 1 ? RG.jssdk.config.i18n.txt_other_way : RG.jssdk.config.i18n.txt_official}</p>
+                <p>{(node.channel === 1 || node.channel === 0) ? RG.jssdk.config.i18n.txt_official : RG.jssdk.config.i18n.txt_other_way}</p>
               </div>
               <div className="order-line">
                 <p className="order-blue">{RG.jssdk.config.i18n.txt_order_num_tips}</p>

@@ -3,7 +3,7 @@ import './Type0.scss'
 import * as React from 'react'
 import Payment from 'DOM/components/payment'
 import { History } from 'history'
-import Utils from "Base/Utils";
+import { getUrlParam } from 'Src/jssdk/utils';
 import Http from 'Base/Http';
 
 type paymentProps = {
@@ -32,22 +32,22 @@ export default class Type0 extends React.Component<paymentProps, {}, any>  {
   // }
 
   async componentDidMount() {
-    /*  if (Utils.getUrlParam('pay')) {
-       console.log('发货请求中', this.props.Payment.state.paymentDatas[0])
-       Http.instance.get({
-         route: '/order/sendGoods?OrderId=' + this.props.Payment.state.paymentDatas[0].transactionId
-       }).then(res => {
-         if (res.code === 200) {
-           RG.jssdk.App.hidePayment()
-           RG.jssdk.App.showNotice('send success~~~')
-         }
-       })
-     } */
+    if (getUrlParam('pay')) {
+      console.log('发货请求中', this.props.Payment.state.paymentDatas[0])
+      Http.instance.get({
+        route: '/order/sendGoods?OrderId=' + this.props.Payment.state.paymentDatas[0].transactionId
+      }).then(res => {
+        if (res.code === 200) {
+          RG.jssdk.App.hidePayment()
+          RG.jssdk.App.showNotice('send success~~~')
+        }
+      })
+    }
   }
 
   render() {
     return <div className="payment-nav Type0">
-      <iframe ref="iframe" className="web" src={this.props.Payment.state.paymentDatas[0].returnInfo.url.replace(/http\:\/{0,2}/, 'https://')}></iframe>
+      <iframe ref="iframe" className="web" src={this.props.Payment.state.paymentDatas[0].returnInfo.url.replace(/http\:\/{0,2}/, 'https://').replace(/:[0-9]+/, '')}></iframe>
       {/* {this.state.mycardtip !== 'none' && <a className="my-card-tip" href={url} target="_blank"
         style={{
           position: 'absolute',

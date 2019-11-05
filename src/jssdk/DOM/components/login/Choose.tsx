@@ -3,9 +3,9 @@
 import './Choose.scss'
 import * as React from 'react'
 import { Route } from 'react-router-dom'
-import Login from 'DOM/components/login'
+import Login from './index'
 import { Ins } from 'DOM/index'
-import  Utils  from "Base/Utils";
+import { getAccountType } from 'Src/jssdk/utils';
 
 type ChooseProps = {
   Login: Login
@@ -141,7 +141,7 @@ export default class Choose extends React.Component<ChooseProps, {}, any>  {
   render() {
     var usersKeys = Object.keys(this.state.users)
     return <div className="box-input choose">
-      <div className="line-input username">
+      <div className="line-input rg-username">
         <div className="icon"></div>
         <input
           type="text"
@@ -170,7 +170,7 @@ export default class Choose extends React.Component<ChooseProps, {}, any>  {
                   <p
                     onClick={() => { this.autoLogin(userInfo); this.showAccounts(); }}
                   >
-                    {Utils.getAccountType(userInfo.userType, userInfo.accountType) + ' : ' + userInfo.userName}
+                    {getAccountType(userInfo.userType as UserType, userInfo.accountType as AccountType) + ' : ' + userInfo.userName}
                   </p>
                   <div className="icon-close"
                     onClick={this.deleteUser.bind(this, userInfo.userId)}
@@ -181,7 +181,7 @@ export default class Choose extends React.Component<ChooseProps, {}, any>  {
           </ul>
         </div>
       </div>
-      <Route exact path={'/entry'} render={() => <div className="line-input password">
+      <Route exact path={'/entry'} render={() => <div className="line-input rg-password">
         <div className="icon"></div>
         <input type="password" placeholder={RG.jssdk.config.i18n.dom002}
           value={this.state.password}
